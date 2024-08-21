@@ -10,6 +10,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.ticktick.data.DatabaseRepository
+import com.example.ticktick.data.IDatabaseRepository
+import com.example.ticktick.model.User
 import com.google.firebase.auth.FirebaseAuth
 import io.realm.kotlin.Realm
 
@@ -21,6 +24,7 @@ import io.realm.kotlin.Realm
     private lateinit var redirectToLogin : TextView
 
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var repository: IDatabaseRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +38,7 @@ import io.realm.kotlin.Realm
         redirectToLogin = findViewById(R.id.redirect_to_login)
 
         firebaseAuth = FirebaseAuth.getInstance()
+        repository = DatabaseRepository()
 
         registerButton.setOnClickListener {
             val email = emailInput.text.toString()
@@ -56,6 +61,8 @@ import io.realm.kotlin.Realm
             {
                 firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
+                        val user = User(email, password)
+                        repository.createUser(user)
                         val intent = Intent(this, LoginActivity::class.java)
                         startActivity(intent)
                     }

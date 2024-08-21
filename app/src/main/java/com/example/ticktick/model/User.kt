@@ -1,13 +1,19 @@
 package com.example.ticktick.model
 
-import io.realm.annotations.RealmClass
-import io.realm.kotlin.types.RealmObject
-import io.realm.kotlin.types.annotations.PrimaryKey
-import org.mongodb.kbson.ObjectId
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import org.bson.types.ObjectId
 
-public class User : RealmObject {
+open class User : RealmObject {
     @PrimaryKey
-    var _id: ObjectId = ObjectId.invoke()
+    var id: ObjectId = ObjectId()
     var email: String = ""
     var password: String = ""
+
+    constructor()
+
+    constructor(email: String, password: String) {
+        this.email = email
+        this.password = password
+    }
 }

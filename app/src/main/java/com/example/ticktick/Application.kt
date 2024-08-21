@@ -8,7 +8,8 @@ class Application : Application() {
     override fun onCreate() {
         super.onCreate()
         Realm.init(this)
-        val config = RealmConfiguration.Builder().build()
+        val config = RealmConfiguration.Builder()
+            .allowWritesOnUiThread(true).build()
         Realm.setDefaultConfiguration(config)
     }
 }
