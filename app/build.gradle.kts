@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id ("kotlin-kapt")
-    id ("realm-android")
+    id ("io.realm.kotlin")
     alias(libs.plugins.google.gms.google.services)
 }
 
@@ -38,6 +38,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
 }
 

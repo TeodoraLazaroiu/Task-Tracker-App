@@ -1,12 +1,12 @@
 package com.example.ticktick.model
 
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import org.bson.types.ObjectId
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
+import org.mongodb.kbson.ObjectId
 
 open class User : RealmObject {
     @PrimaryKey
-    var id: ObjectId = ObjectId()
+    var _id: ObjectId = ObjectId()
     var email: String = ""
     var password: String = ""
 
