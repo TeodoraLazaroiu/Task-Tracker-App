@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/date_time_picker"
+    app:startDestination="@id/datePicker2">
+    <fragment
+        android:id="@+id/datePicker2"
+        android:name="com.example.ticktick.DatePicker"
+        android:label="fragment_date_picker"
+        tools:layout="@layout/fragment_date_picker">
+        <action
+            android:id="@+id/action_datePicker2_to_timePicker22"
+            app:destination="@id/timePicker2"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/timePicker2"
+        android:name="com.example.ticktick.TimePicker"
+        android:label="fragment_time_picker"
+        tools:layout="@layout/fragment_time_picker" >
+        <action
+            android:id="@+id/action_timePicker2_to_datePicker2"
+            app:destination="@id/datePicker2"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+    </fragment>
+</navigation>

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -38,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
 
         if (firebaseAuth.currentUser==null){
+
             loginButton.setOnClickListener {
                 val email = emailInput.text.toString()
                 val password = passwordInput.text.toString()
