@@ -6,7 +6,7 @@
     app:startDestination="@id/datePicker2">
     <fragment
         android:id="@+id/datePicker2"
-        android:name="com.example.ticktick.DatePicker"
+        android:name="com.example.ticktick.fragment.DatePicker"
         android:label="fragment_date_picker"
         tools:layout="@layout/fragment_date_picker">
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/timePicker2"
-        android:name="com.example.ticktick.TimePicker"
+        android:name="com.example.ticktick.fragment.TimePicker"
         android:label="fragment_time_picker"
         tools:layout="@layout/fragment_time_picker" >
         <action
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/showDateTime"
-        android:name="com.example.ticktick.ShowDateTime"
+        android:name="com.example.ticktick.fragment.ShowDateTime"
         android:label="fragment_show_date_time"
         tools:layout="@layout/fragment_show_date_time" >
         <action
