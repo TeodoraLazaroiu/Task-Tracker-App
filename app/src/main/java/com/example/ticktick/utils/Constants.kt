@@ -1,4 +1,4 @@
-package com.example.ticktick
+package com.example.ticktick.utils
 
 class Constants {
     companion object {

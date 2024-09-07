@@ -1,4 +1,4 @@
-package com.example.ticktick
+package com.example.ticktick.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.ticktick.databinding.FragmentDatePickerBinding
+import com.example.ticktick.AddTaskActivity
 import com.example.ticktick.databinding.FragmentShowDateTimeBinding
 
 class ShowDateTime : Fragment() {
