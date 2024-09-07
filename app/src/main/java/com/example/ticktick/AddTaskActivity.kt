@@ -1,13 +1,12 @@
 package com.example.ticktick
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ticktick.data.RealmDatabase
 import com.example.ticktick.databinding.ActivityAddtaskBinding
@@ -38,6 +37,7 @@ class AddTaskActivity : AppCompatActivity() {
         var addTaskButton = binding.addTaskButton
         addTaskButton.setOnClickListener {
             createTask()
+            returnToMainActivity()
         }
 
         binding.reminderCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -54,6 +54,11 @@ class AddTaskActivity : AppCompatActivity() {
         databaseRepository.saveTask(task)
     }
 
+    private fun returnToMainActivity() {
+        var intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+    }
+
     fun setDate(date: String) {
         this.date = date
     }
@@ -61,6 +66,14 @@ class AddTaskActivity : AppCompatActivity() {
     fun setTime(time: String) {
         this.time = time
         this.binding.addTaskButton.isEnabled = true
+    }
+
+    fun getDate(): String{
+        return this.date
+    }
+
+    fun getTime(): String{
+        return this.time
     }
 
     fun getDateTime(): String? {
