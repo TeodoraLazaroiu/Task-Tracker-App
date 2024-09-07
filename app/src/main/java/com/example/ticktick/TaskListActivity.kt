@@ -14,6 +14,7 @@ import androidx.annotation.RequiresExtension
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticktick.data.RealmDatabase
@@ -21,8 +22,10 @@ import com.example.ticktick.data.api.ApiClientFactory
 import com.example.ticktick.databinding.ActivityTasklistBinding
 import com.example.ticktick.fragment.ActionSheet
 import com.example.ticktick.model.Task
-import com.example.ticktick.task.TaskAdapter
-import com.example.ticktick.task.TaskClickListener
+import com.example.ticktick.adapter.TaskAdapter
+import com.example.ticktick.adapter.TaskClickListener
+import com.example.ticktick.fragment.DeleteDialog
+import com.example.ticktick.fragment.DialogListener
 import com.example.ticktick.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class  TaskListActivity : AppCompatActivity(), TaskClickListener {
+class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var binding: ActivityTasklistBinding
@@ -76,8 +79,11 @@ class  TaskListActivity : AppCompatActivity(), TaskClickListener {
             insets
         }
 
-        val taskList = database.getTaskForUser(currentUserId)
+        setRecyclerView()
+    }
 
+    private fun setRecyclerView() {
+        val taskList = database.getTaskForUser(currentUserId)
         recyclerView = binding.tasksList
         recyclerView.setLayoutManager(LinearLayoutManager(applicationContext))
         recyclerView.setAdapter(TaskAdapter(taskList, this))
@@ -87,8 +93,16 @@ class  TaskListActivity : AppCompatActivity(), TaskClickListener {
 
     override fun completeTask(task: Task) {
         database.completeTask(task)
-        val taskList = database.getTaskForUser(currentUserId)
-        recyclerView.setAdapter(TaskAdapter(taskList, this))
+        setRecyclerView()
+    }
+
+    override fun deleteTask(task: Task) {
+        DeleteDialog(task, this).show(supportFragmentManager, "dialog")
+    }
+
+    override fun onDialogDeleteClick(task: Task, dialog: DialogFragment) {
+        database.deleteTask(task)
+        setRecyclerView()
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
