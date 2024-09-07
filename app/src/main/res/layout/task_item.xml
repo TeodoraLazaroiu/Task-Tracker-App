@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:id="@+id/taskItem">
+    android:id="@+id/taskItem">\
 
     <LinearLayout
         android:orientation="horizontal"
@@ -25,7 +25,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             style="@style/TextAppearance.AppCompat.Title"
-            android:text="" />
+            android:text="task" />
 
         <TextView
             android:id="@+id/task_date"
@@ -33,7 +33,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginHorizontal="10dp"
-            android:text="" />
+            android:visibility="visible"
+            android:text="due date"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/delete_task"
+            android:backgroundTint="@android:color/transparent"
+            android:id="@+id/task_delete"
+            android:visibility="gone"
+            />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

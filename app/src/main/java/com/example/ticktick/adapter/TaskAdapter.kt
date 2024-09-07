@@ -1,14 +1,14 @@
-package com.example.ticktick.task
+package com.example.ticktick.adapter
 
 import android.content.Context
 import android.graphics.Paint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticktick.R
 import com.example.ticktick.databinding.TaskItemBinding
 import com.example.ticktick.model.Task
-import io.realm.kotlin.internal.toDuration
 import io.realm.kotlin.query.RealmResults
 import io.realm.kotlin.types.RealmInstant
 import java.time.Instant
@@ -34,7 +34,6 @@ class TaskAdapter(private val tasks: RealmResults<Task>, private val clickListen
 
 class TaskViewHolder(private val context: Context, private val binding: TaskItemBinding, private val clickListener: TaskClickListener) : RecyclerView.ViewHolder(binding.root) {
     fun bindTask(task: Task) {
-        val timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
         binding.taskName.text = task.taskName
 
         if (task.dueDate != null) {
@@ -44,9 +43,10 @@ class TaskViewHolder(private val context: Context, private val binding: TaskItem
             binding.taskDate.text = ""
         }
 
-
         if (task.completed) {
             binding.taskName.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            binding.taskDate.visibility = View.GONE
+            binding.taskDelete.visibility = View.VISIBLE
         }
 
         val checkbox = if(task.completed) R.drawable.checked_box else R.drawable.unchecked_box
@@ -55,11 +55,16 @@ class TaskViewHolder(private val context: Context, private val binding: TaskItem
         binding.taskCheckbox.setOnClickListener {
             clickListener.completeTask(task)
         }
+
+        binding.taskDelete.setOnClickListener {
+            clickListener.deleteTask(task)
+        }
     }
 }
 
 interface TaskClickListener {
     fun completeTask(task: Task)
+    fun deleteTask(task: Task)
 }
 
 private fun convertTimeToString(realmInstant: RealmInstant): String {

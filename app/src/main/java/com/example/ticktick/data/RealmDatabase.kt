@@ -14,12 +14,6 @@ class RealmDatabase {
         Realm.open(configuration)
     }
 
-    fun saveUser(user: User) {
-        realm.writeBlocking {
-            copyToRealm(user)
-        }
-    }
-
     fun saveTask(task: Task) {
         realm.writeBlocking {
             copyToRealm(task)
@@ -34,6 +28,12 @@ class RealmDatabase {
         realm.writeBlocking {
             val newTask = findLatest(task)
             newTask?.completed = !newTask?.completed!!
+        }
+    }
+
+    fun deleteTask(task: Task) {
+        realm.writeBlocking {
+            findLatest(task)?.also { delete(it) }
         }
     }
 }
