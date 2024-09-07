@@ -49,7 +49,6 @@ class  TaskListActivity : AppCompatActivity(), TaskClickListener {
         binding.greetingTextView.text = greeting
 
         addTaskButton = binding.addTaskButton
-        addTaskButton.text = "Add Task"
         addTaskButton.setOnClickListener {
             val intent = Intent(this, AddTaskActivity::class.java)
             intent.putExtra("uid", currentUserId)
