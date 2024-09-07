@@ -2,11 +2,10 @@ package com.example.ticktick
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.ticktick.databinding.FragmentDatePickerBinding
 
@@ -25,7 +24,7 @@ class DatePicker : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDatePickerBinding.inflate(inflater, container, false)
-        binding.nextButton.setOnClickListener(){
+        binding.nextButton.setOnClickListener {
             parentActivity.setDate(getDateFromPicker())
             navigateToFragment()
         }
@@ -37,9 +36,11 @@ class DatePicker : Fragment() {
     }
 
     fun getDateFromPicker(): String {
-        val day = if (binding.datePicker.dayOfMonth.toString().length < 2) "0" + binding.datePicker.dayOfMonth.toString() else binding.datePicker.dayOfMonth
-        val month = if (binding.datePicker.month.toString().length < 2) "0" + (binding.datePicker.month+1).toString() else (binding.datePicker.month+1)
+        val day =
+            if (binding.datePicker.dayOfMonth.toString().length < 2) "0" + binding.datePicker.dayOfMonth.toString() else binding.datePicker.dayOfMonth
+        val month =
+            if (binding.datePicker.month.toString().length < 2) "0" + (binding.datePicker.month + 1).toString() else (binding.datePicker.month + 1)
         val year = binding.datePicker.year.toString()
-        return("$year-$month-$day")
+        return ("$year-$month-$day")
     }
 }

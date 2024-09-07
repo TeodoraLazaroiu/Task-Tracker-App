@@ -1,16 +1,13 @@
 package com.example.ticktick
 
-import android.R
-import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.inputmethodservice.Keyboard
-import android.inputmethodservice.KeyboardView
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ticktick.data.RealmDatabase
 import com.example.ticktick.databinding.ActivityAddtaskBinding
@@ -35,35 +32,35 @@ class AddTaskActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         databaseRepository = RealmDatabase()
-        sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
+        sharedPreferences =
+            getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
 
         var addTaskButton = binding.addTaskButton
         addTaskButton.setOnClickListener {
             createTask()
         }
 
-        binding.reminderCheckbox.setOnCheckedChangeListener {
-            buttonView, isChecked ->
-                showReminder(isChecked)
+        binding.reminderCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
+            showReminder(isChecked)
         }
     }
 
     fun createTask() {
         var taskName = binding.addTaskName.text.toString()
-        val userId = sharedPreferences.getString("user_id", "DEFAULT")?:"DEFAULT";
+        val userId = sharedPreferences.getString("user_id", "DEFAULT") ?: "DEFAULT"
         val dateTime = getDateTime()
         val dueDate = formatDateTime(dateTime)
         val task = Task(userId, taskName, dueDate)
         databaseRepository.saveTask(task)
     }
 
-    fun setDate(date:String) {
+    fun setDate(date: String) {
         this.date = date
     }
 
-    fun setTime(time:String) {
+    fun setTime(time: String) {
         this.time = time
-        this.binding.addTaskButton.isEnabled = true;
+        this.binding.addTaskButton.isEnabled = true
     }
 
     fun getDateTime(): String? {
@@ -75,22 +72,23 @@ class AddTaskActivity : AppCompatActivity() {
     }
 
     fun showReminder(isChecked: Boolean) {
-        if (isChecked){
-            binding.fragmentContainerView.visibility = 0;
-            binding.fragmentContainerView.visibility = 0;
-            binding.addTaskButton.isEnabled = false;
+        if (isChecked) {
+            binding.fragmentContainerView.visibility = View.VISIBLE
+            binding.fragmentContainerView.visibility = View.VISIBLE
+            binding.addTaskButton.isEnabled = false
             //hide the keyboard when showing the time set fragments
             val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(this.binding.root.windowToken, 0)
         } else {
-            binding.fragmentContainerView.visibility = 8;
-            binding.fragmentContainerView.visibility = 8;
-            binding.addTaskButton.isEnabled = true;
+            binding.fragmentContainerView.visibility = View.GONE
+            binding.fragmentContainerView.visibility = View.GONE
+            binding.addTaskButton.isEnabled = true
             this.setDate("")
             this.setTime("")
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun formatDateTime(dateTimeAsString: String?): RealmInstant? {
         if (dateTimeAsString != null) {
             val ldt = LocalDateTime.parse(dateTimeAsString)
