@@ -1,7 +1,9 @@
 package com.example.ticktick
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
@@ -16,7 +18,6 @@ import com.example.ticktick.databinding.ActivityMainBinding
 import com.example.ticktick.model.Task
 import com.example.ticktick.task.TaskAdapter
 import com.example.ticktick.task.TaskClickListener
-import com.example.ticktick.task.TaskViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class  MainActivity : AppCompatActivity(), TaskClickListener {
@@ -24,8 +25,10 @@ class  MainActivity : AppCompatActivity(), TaskClickListener {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var binding: ActivityMainBinding
     private lateinit var addTaskButton: Button
-    private lateinit var taskViewModel: TaskViewModel
     private lateinit var database: RealmDatabase
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var currentUserId: String
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +40,11 @@ class  MainActivity : AppCompatActivity(), TaskClickListener {
         firebaseAuth = FirebaseAuth.getInstance()
         database = RealmDatabase()
 
-        val currentUser = firebaseAuth.currentUser
-        val email = currentUser?.email
+        sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
+        currentUserId = sharedPreferences.getString("user_id", "DEFAULT") ?: "DEFAULT"
+
+        var currentUser = firebaseAuth.currentUser!!
+        val email = currentUser.email
         val greeting = "Hello ${email ?: "anonymous"}"
         binding.greetingTextView.text = greeting
 
@@ -46,7 +52,7 @@ class  MainActivity : AppCompatActivity(), TaskClickListener {
         addTaskButton.text = "Add Task"
         addTaskButton.setOnClickListener {
             val intent = Intent(this, AddTaskActivity::class.java)
-            intent.putExtra("uid", currentUser?.uid)
+            intent.putExtra("uid", currentUserId)
             startActivity(intent)
         }
 
@@ -56,32 +62,16 @@ class  MainActivity : AppCompatActivity(), TaskClickListener {
             insets
         }
 
-        taskViewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
-        // val taskList = database.getTaskForUser(currentUser?.uid)
-        val taskList = database.getAllTasks()
-        val recyclerView : RecyclerView = binding.tasksList
+        val taskList = database.getTaskForUser(currentUserId)
+
+        recyclerView = binding.tasksList
         recyclerView.setLayoutManager(LinearLayoutManager(applicationContext))
         recyclerView.setAdapter(TaskAdapter(taskList, this))
-
-        setRecyclerView(taskList)
-    }
-
-    private fun setRecyclerView(taskList : List<Task>) {
-        val mainActivity = this
-//        taskViewModel.taskList.observe(this) {
-//            binding.tasksList.apply {
-//                layoutManager = LinearLayoutManager(applicationContext)
-//                adapter = TaskAdapter(it, mainActivity)
-//            }
-//        }
-
-//        binding.tasksList.apply {
-//            layoutManager = LinearLayoutManager(applicationContext)
-//            adapter = TaskAdapter(taskList, mainActivity)
-//        }
     }
 
     override fun completeTask(task: Task) {
-        task.completed = true
+        database.completeTask(task)
+        val taskList = database.getTaskForUser(currentUserId)
+        recyclerView.setAdapter(TaskAdapter(taskList, this))
     }
 }

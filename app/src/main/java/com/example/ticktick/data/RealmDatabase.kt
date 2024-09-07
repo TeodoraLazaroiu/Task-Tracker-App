@@ -26,11 +26,14 @@ class RealmDatabase {
         }
     }
 
-    fun getAllTasks(): RealmResults<Task> {
-        return realm.query<Task>().find()
+    fun getTaskForUser(userId: String?) : RealmResults<Task> {
+        return realm.query<Task>("userId == $0", userId).find()
     }
 
-    fun getTaskForUser(userId: String?) : RealmResults<Task> {
-        return realm.query<Task>("userId == $userId", userId).find()
+    fun completeTask(task: Task) {
+        realm.writeBlocking {
+            val newTask = findLatest(task)
+            newTask?.completed = !newTask?.completed!!
+        }
     }
 }
