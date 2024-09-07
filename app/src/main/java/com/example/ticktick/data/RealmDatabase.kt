@@ -5,6 +5,8 @@ import com.example.ticktick.model.User
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.RealmResults
+import io.realm.kotlin.query.find
 
 class RealmDatabase {
     val realm: Realm by lazy {
@@ -24,7 +26,11 @@ class RealmDatabase {
         }
     }
 
-    fun getAllTasks(): List<Task> {
+    fun getAllTasks(): RealmResults<Task> {
         return realm.query<Task>().find()
+    }
+
+    fun getTaskForUser(userId: String?) : RealmResults<Task> {
+        return realm.query<Task>("userId == $userId", userId).find()
     }
 }

@@ -1,5 +1,6 @@
 package com.example.ticktick.model
 
+import com.example.ticktick.R
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
