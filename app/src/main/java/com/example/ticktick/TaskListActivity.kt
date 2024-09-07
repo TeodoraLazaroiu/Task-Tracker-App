@@ -10,20 +10,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticktick.data.RealmDatabase
-import com.example.ticktick.databinding.ActivityMainBinding
+import com.example.ticktick.databinding.ActivityTasklistBinding
 import com.example.ticktick.model.Task
 import com.example.ticktick.task.TaskAdapter
 import com.example.ticktick.task.TaskClickListener
 import com.google.firebase.auth.FirebaseAuth
 
-class  MainActivity : AppCompatActivity(), TaskClickListener {
+class  TaskListActivity : AppCompatActivity(), TaskClickListener {
 
     private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityTasklistBinding
     private lateinit var addTaskButton: Button
     private lateinit var database: RealmDatabase
     private lateinit var recyclerView: RecyclerView
@@ -34,7 +33,7 @@ class  MainActivity : AppCompatActivity(), TaskClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityTasklistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()

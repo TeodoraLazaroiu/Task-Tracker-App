@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
                             sharedPreferences.edit()
                                 .putString("user_id", currentUser?.uid.toString()).apply()
 
-                            val intent = Intent(this, MainActivity::class.java)
+                            val intent = Intent(this, TaskListActivity::class.java)
                             startActivity(intent)
                         } else {
                             Toast.makeText(this, "Could not login user", Toast.LENGTH_SHORT).show()
@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(Intent(this, RegisterActivity::class.java))
             }
         } else {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, TaskListActivity::class.java)
             startActivity(intent)
         }
 

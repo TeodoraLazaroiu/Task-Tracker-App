@@ -39,7 +39,7 @@ class DatePicker : Fragment() {
         val day =
             if (binding.datePicker.dayOfMonth.toString().length < 2) "0" + binding.datePicker.dayOfMonth.toString() else binding.datePicker.dayOfMonth
         val month =
-            if (binding.datePicker.month.toString().length < 2) "0" + (binding.datePicker.month + 1).toString() else (binding.datePicker.month + 1)
+            if ((binding.datePicker.month + 1).toString().length < 2) "0" + (binding.datePicker.month + 1).toString() else (binding.datePicker.month + 1)
         val year = binding.datePicker.year.toString()
         return ("$year-$month-$day")
     }
