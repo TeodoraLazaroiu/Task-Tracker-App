@@ -88,7 +88,6 @@ class AddTaskActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun formatDateTime(dateTimeAsString: String?): RealmInstant? {
         if (dateTimeAsString != null) {
             val ldt = LocalDateTime.parse(dateTimeAsString)
