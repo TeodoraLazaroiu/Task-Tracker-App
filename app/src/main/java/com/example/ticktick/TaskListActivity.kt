@@ -56,6 +56,10 @@ class  TaskListActivity : AppCompatActivity(), TaskClickListener {
             startActivity(intent)
         }
 
+        binding.greetingTextView.setOnClickListener() {
+            ActionSheet().show(supportFragmentManager, "actionSheet")
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
