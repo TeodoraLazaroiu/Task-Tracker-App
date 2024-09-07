@@ -19,12 +19,21 @@
             />
 
         <TextView
+            android:id="@+id/task_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="string"
-            android:id="@+id/task_name"
-            />
+            android:layout_weight="1"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/task_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:text="" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
