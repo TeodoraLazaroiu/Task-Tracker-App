@@ -34,8 +34,8 @@ class TimePicker : Fragment() {
     }
 
     fun getTimeFromPicker(): String {
-        val hour = binding.timePicker.hour
-        val minute = binding.timePicker.minute
+        val hour = if (binding.timePicker.hour.toString().length < 2) "0"+binding.timePicker.hour.toString() else binding.timePicker.hour
+        val minute = if (binding.timePicker.minute.toString().length < 2) "0"+binding.timePicker.minute.toString() else binding.timePicker.minute
         return ("$hour:$minute:00.00")
     }
 }
