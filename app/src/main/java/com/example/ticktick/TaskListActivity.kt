@@ -52,11 +52,14 @@ class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener 
         binding.greetingTextView.text = greeting
 
         addTaskButton = binding.addTaskButton
-        addTaskButton.text = "Add Task"
         addTaskButton.setOnClickListener {
             val intent = Intent(this, AddTaskActivity::class.java)
             intent.putExtra("uid", currentUserId)
             startActivity(intent)
+        }
+
+        binding.greetingTextView.setOnClickListener() {
+            ActionSheet().show(supportFragmentManager, "actionSheet")
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
