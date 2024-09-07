@@ -16,7 +16,7 @@ open class Task : RealmObject {
 
     constructor()
 
-    constructor(userId: String?, taskName: String, dueDate: RealmInstant) {
+    constructor(userId: String?, taskName: String, dueDate: RealmInstant?) {
         this.userId = userId
         this.taskName = taskName
         this.completed = false

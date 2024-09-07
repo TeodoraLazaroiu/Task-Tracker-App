@@ -1,17 +1,16 @@
 package com.example.ticktick
 
+import android.R
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.navigation.Navigation
-import com.example.ticktick.databinding.FragmentDatePickerBinding
+import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.Fragment
 import com.example.ticktick.databinding.FragmentTimePickerBinding
+
 
 class TimePicker : Fragment() {
     private lateinit var parentActivity: AddTaskActivity
@@ -24,19 +23,19 @@ class TimePicker : Fragment() {
     }
 
     override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTimePickerBinding.inflate(inflater, container, false)
-        binding.setButton.setOnClickListener(){
+        binding.setButton.setOnClickListener() {
             parentActivity.setTime(getTimeFromPicker())
         }
         return binding.root
     }
 
     fun getTimeFromPicker(): String {
-        var hour = binding.timePicker.hour
-        var minute = binding.timePicker.minute
-        return("$hour:$minute")
+        val hour = binding.timePicker.hour
+        val minute = binding.timePicker.minute
+        return ("$hour:$minute:00.00")
     }
 }
