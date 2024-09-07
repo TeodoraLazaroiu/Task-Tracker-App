@@ -34,7 +34,7 @@ class AddTaskActivity : AppCompatActivity() {
         sharedPreferences =
             getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
 
-        var addTaskButton = binding.addTaskButton
+        val addTaskButton = binding.addTaskButton
         addTaskButton.setOnClickListener {
             createTask()
             returnToMainActivity()
@@ -46,7 +46,7 @@ class AddTaskActivity : AppCompatActivity() {
     }
 
     fun createTask() {
-        var taskName = binding.addTaskName.text.toString()
+        val taskName = binding.addTaskName.text.toString()
         val userId = sharedPreferences.getString("user_id", "DEFAULT") ?: "DEFAULT"
         val dateTime = getDateTime()
         val dueDate = formatDateTime(dateTime)
@@ -55,7 +55,7 @@ class AddTaskActivity : AppCompatActivity() {
     }
 
     private fun returnToMainActivity() {
-        var intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
 

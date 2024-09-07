@@ -14,10 +14,10 @@ import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var emailInput : EditText
-    private lateinit var passwordInput : EditText
-    private lateinit var loginButton : Button
-    private lateinit var redirectToRegister : TextView
+    private lateinit var emailInput: EditText
+    private lateinit var passwordInput: EditText
+    private lateinit var loginButton: Button
+    private lateinit var redirectToRegister: TextView
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var sharedPreferences: SharedPreferences
@@ -34,9 +34,10 @@ class LoginActivity : AppCompatActivity() {
         redirectToRegister = findViewById(R.id.redirect_to_register)
 
         firebaseAuth = FirebaseAuth.getInstance()
-        sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE);
+        sharedPreferences =
+            getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
 
-        if (firebaseAuth.currentUser==null){
+        if (firebaseAuth.currentUser == null) {
 
             loginButton.setOnClickListener {
                 val email = emailInput.text.toString()
@@ -44,18 +45,17 @@ class LoginActivity : AppCompatActivity() {
 
                 if (email.isEmpty() or password.isEmpty()) {
                     Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
-                }
-                else {
+                } else {
                     firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                         if (it.isSuccessful) {
                             //store uid in shared prefs
-                            val currentUser = firebaseAuth.currentUser;
-                            sharedPreferences.edit().putString("user_id", currentUser?.uid.toString()).apply()
+                            val currentUser = firebaseAuth.currentUser
+                            sharedPreferences.edit()
+                                .putString("user_id", currentUser?.uid.toString()).apply()
 
                             val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
-                        }
-                        else {
+                        } else {
                             Toast.makeText(this, "Could not login user", Toast.LENGTH_SHORT).show()
                         }
                     }
