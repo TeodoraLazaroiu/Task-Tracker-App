@@ -23,7 +23,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var sharedPreferences: SharedPreferences
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,10 +34,10 @@ class LoginActivity : AppCompatActivity() {
         redirectToRegister = findViewById(R.id.redirect_to_register)
 
         firebaseAuth = FirebaseAuth.getInstance()
-        sharedPreferences =
-            getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
+        val currentUser = firebaseAuth.currentUser
 
-        if (firebaseAuth.currentUser == null) {
+        if (currentUser == null) {
 
             loginButton.setOnClickListener {
                 val email = emailInput.text.toString()
@@ -49,10 +48,8 @@ class LoginActivity : AppCompatActivity() {
                 } else {
                     firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            //store uid in shared prefs
-                            val currentUser = firebaseAuth.currentUser
-                            sharedPreferences.edit()
-                                .putString("user_id", currentUser?.uid.toString()).apply()
+                            val newCurrentUser = firebaseAuth.currentUser
+                            sharedPreferences.edit().putString("user_id", newCurrentUser?.uid.toString()).apply()
 
                             val intent = Intent(this, TaskListActivity::class.java)
                             startActivity(intent)
@@ -67,6 +64,7 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(Intent(this, RegisterActivity::class.java))
             }
         } else {
+            sharedPreferences.edit().putString("user_id", currentUser.uid).apply()
             val intent = Intent(this, TaskListActivity::class.java)
             startActivity(intent)
         }

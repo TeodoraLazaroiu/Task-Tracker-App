@@ -22,9 +22,14 @@ class ShowDateTime : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentShowDateTimeBinding.inflate(inflater, container, false)
-        binding.showSetDate.text="Reminder set for " + parentActivity.getDate() + " at " + parentActivity.getTime()
+        binding.showSetDate.text= buildString {
+            append("Reminder set for ")
+            append(parentActivity.getDate())
+            append(" at ")
+            append(parentActivity.getTime())
+        }
         return binding.root
     }
 }

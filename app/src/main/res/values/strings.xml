@@ -3,4 +3,8 @@
     <string name="add_Task">Add</string>
     <string name="logout">Log Out</string>
     <string name="import_tasks">Import</string>
+    <string name="next">Next</string>
+    <string name="set">Set</string>
+    <string name="text">text</string>
+    <string name="greeting_text">text</string>
 </resources>

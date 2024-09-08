@@ -33,11 +33,11 @@ class DatePicker : Fragment() {
         return binding.root
     }
 
-    fun navigateToFragment() {
+    private fun navigateToFragment() {
         Navigation.findNavController(binding.root).navigate(R.id.action_datePicker2_to_timePicker22)
     }
 
-    fun getDateFromPicker(): String {
+    private fun getDateFromPicker(): String {
         val day =
             if (binding.datePicker.dayOfMonth.toString().length < 2) "0" + binding.datePicker.dayOfMonth.toString() else binding.datePicker.dayOfMonth
         val month =

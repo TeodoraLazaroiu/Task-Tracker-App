@@ -1,6 +1,8 @@
  package com.example.ticktick
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -8,13 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-//import com.example.ticktick.data.DatabaseRepository
-//import com.example.ticktick.data.IDatabaseRepository
-import com.example.ticktick.model.User
+import com.example.ticktick.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
-import io.realm.kotlin.Realm
 
  class RegisterActivity : AppCompatActivity() {
     private lateinit var emailInput : EditText
@@ -24,7 +21,7 @@ import io.realm.kotlin.Realm
     private lateinit var redirectToLogin : TextView
 
     private lateinit var firebaseAuth: FirebaseAuth
-//    private lateinit var repository: IDatabaseRepository
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,14 +35,14 @@ import io.realm.kotlin.Realm
         redirectToLogin = findViewById(R.id.redirect_to_login)
 
         firebaseAuth = FirebaseAuth.getInstance()
-//        repository = DatabaseRepository()
+        sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
 
         registerButton.setOnClickListener {
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
             val confirmPass = passwordConfirmInput.text.toString()
 
-            var isValid: Boolean = true
+            var isValid = true
             if (email.isEmpty() or password.isEmpty() or confirmPass.isEmpty())
             {
                 isValid = false
@@ -61,8 +58,6 @@ import io.realm.kotlin.Realm
             {
                 firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        val user = User(email, password)
-                        //repository.createUser(user)
                         val intent = Intent(this, LoginActivity::class.java)
                         startActivity(intent)
                     }

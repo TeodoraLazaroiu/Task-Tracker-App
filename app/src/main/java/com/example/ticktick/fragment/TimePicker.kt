@@ -34,7 +34,7 @@ class TimePicker : Fragment() {
         return binding.root
     }
 
-    fun getTimeFromPicker(): String {
+    private fun getTimeFromPicker(): String {
         val hour =
             if (binding.timePicker.hour.toString().length < 2) "0" + binding.timePicker.hour.toString() else binding.timePicker.hour
         val minute =
@@ -42,7 +42,7 @@ class TimePicker : Fragment() {
         return ("$hour:$minute:00.00")
     }
 
-    fun navigateToNextFragment() {
+    private fun navigateToNextFragment() {
         Navigation.findNavController(binding.root).navigate(R.id.action_timePicker2_to_showDateTime)
     }
 }

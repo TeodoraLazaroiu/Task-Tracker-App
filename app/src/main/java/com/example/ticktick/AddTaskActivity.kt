@@ -12,16 +12,13 @@ import com.example.ticktick.data.RealmDatabase
 import com.example.ticktick.databinding.ActivityAddtaskBinding
 import com.example.ticktick.model.Task
 import com.example.ticktick.utils.Constants
-import io.realm.kotlin.types.RealmInstant
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-
+import com.example.ticktick.utils.Helper
 
 class AddTaskActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddtaskBinding
     private lateinit var databaseRepository: RealmDatabase
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var helper: Helper
     private var date: String = ""
     private var time: String = ""
 
@@ -44,13 +41,14 @@ class AddTaskActivity : AppCompatActivity() {
         binding.reminderCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
             showReminder(isChecked)
         }
+        helper = Helper()
     }
 
-    fun createTask() {
+    private fun createTask() {
         val taskName = binding.addTaskName.text.toString()
         val userId = sharedPreferences.getString("user_id", "DEFAULT") ?: "DEFAULT"
         val dateTime = getDateTime()
-        val dueDate = formatDateTime(dateTime)
+        val dueDate = helper.formatDateTime(dateTime)
         val task = Task(userId, taskName, dueDate)
         databaseRepository.saveTask(task)
     }
@@ -77,7 +75,7 @@ class AddTaskActivity : AppCompatActivity() {
         return this.time
     }
 
-    fun getDateTime(): String? {
+    private fun getDateTime(): String? {
         if (date.isNotEmpty() && time.isNotEmpty()) {
             return this.date + "T" + this.time
         } else {
@@ -85,12 +83,12 @@ class AddTaskActivity : AppCompatActivity() {
         }
     }
 
-    fun showReminder(isChecked: Boolean) {
+    private fun showReminder(isChecked: Boolean) {
         if (isChecked) {
             binding.fragmentContainerView.visibility = View.VISIBLE
             binding.fragmentContainerView.visibility = View.VISIBLE
             binding.addTaskButton.isEnabled = false
-            //hide the keyboard when showing the time set fragments
+
             val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(this.binding.root.windowToken, 0)
         } else {
@@ -101,18 +99,4 @@ class AddTaskActivity : AppCompatActivity() {
             this.setTime("")
         }
     }
-
-    fun formatDateTime(dateTimeAsString: String?): RealmInstant? {
-        if (dateTimeAsString != null) {
-            val ldt = LocalDateTime.parse(dateTimeAsString)
-            return RealmInstant.from(
-                ldt.toEpochSecond(
-                    ZoneId.systemDefault().rules.getOffset(
-                        Instant.now()
-                    )
-                ), ldt.nano
-            )
-        } else return null
-    }
-
 }

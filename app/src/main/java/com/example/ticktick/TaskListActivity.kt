@@ -1,49 +1,38 @@
 package com.example.ticktick
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticktick.data.RealmDatabase
-import com.example.ticktick.data.api.ApiClientFactory
 import com.example.ticktick.databinding.ActivityTasklistBinding
 import com.example.ticktick.fragment.ActionSheet
 import com.example.ticktick.model.Task
 import com.example.ticktick.adapter.TaskAdapter
 import com.example.ticktick.adapter.TaskClickListener
+import com.example.ticktick.api.ApiService
 import com.example.ticktick.fragment.DeleteDialog
-import com.example.ticktick.fragment.DialogListener
 import com.example.ticktick.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-@SuppressLint("SetTextI18n")
-class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener {
+class TaskListActivity : AppCompatActivity(), TaskClickListener {
 
     private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var binding: ActivityTasklistBinding
     private lateinit var addTaskButton: Button
     private lateinit var database: RealmDatabase
     private lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var currentUserId: String
+    private lateinit var apiService: ApiService
+    lateinit var binding: ActivityTasklistBinding
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -79,7 +68,9 @@ class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener 
         }
 
         setRecyclerView()
-        getRandomQuote()
+
+        apiService = ApiService(this)
+        apiService.getRandomQuote()
     }
 
     private fun setRecyclerView() {
@@ -95,10 +86,10 @@ class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener 
     }
 
     override fun deleteTask(task: Task) {
-        DeleteDialog(task, this).show(supportFragmentManager, "dialog")
+        DeleteDialog(task).show(supportFragmentManager, "dialog")
     }
 
-    override fun onDialogDeleteClick(task: Task, dialog: DialogFragment) {
+    fun onDialogDeleteClick(task: Task) {
         database.deleteTask(task)
         setRecyclerView()
     }
@@ -106,23 +97,5 @@ class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener 
     fun saveImportedTasks(tasks: List<Task>) {
         database.saveTasks(tasks)
         setRecyclerView()
-    }
-
-    private fun getRandomQuote(){
-        val service = ApiClientFactory.makeRetrofitService(Constants.QUOTE_API_URL)
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = service.getQuote()
-            withContext(Dispatchers.Main) {
-                try {
-                    if (response.isSuccessful) {
-                        binding.quoteTextView.text = "\"${response.body()?.get(0)?.q.toString()}\" - ${response.body()?.get(0)?.a.toString()}"
-                    } else {
-                        Log.e("error", "${response.code()}")
-                    }
-                } catch (e: Throwable) {
-                    Log.e("error",e.message.toString())
-                }
-            }
-        }
     }
 }

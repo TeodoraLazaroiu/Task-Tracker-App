@@ -27,10 +27,10 @@
             android:id="@+id/greetingTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:padding="5dp"
-            android:text="text"
-            android:textSize="25sp"
+            android:text="@string/greeting_text"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
         <TextView
@@ -38,20 +38,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tasksList"
-            android:layout_marginLeft="10dp"
+            android:layout_margin="30dp"
             android:gravity="center"
             android:padding="5dp"
-            android:text="text"
-            android:textColor="@color/common_google_signin_btn_text_dark_disabled"
-            android:textSize="12dp"/>
+            android:text="@string/text"
+            android:textStyle="italic"
+            android:textColor="@color/common_google_signin_btn_text_light"
+            android:textSize="14sp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:paddingRight="24dp"
-            android:paddingBottom="10dp">
+            android:paddingEnd="24dp"
+            android:paddingBottom="10dp"
+            tools:ignore="RtlSymmetry">
 
             <Button
                 android:id="@+id/addTaskButton"
@@ -59,7 +61,8 @@
                 android:layout_height="50dp"
                 android:drawableLeft="@drawable/baseline_add_24"
                 android:backgroundTint="@color/color_selector"
-                android:text="@string/add_Task" />
+                android:text="@string/add_Task"
+                tools:ignore="RtlHardcoded" />
         </LinearLayout>
 
     </RelativeLayout>
