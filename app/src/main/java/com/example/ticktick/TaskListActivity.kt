@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.http.HttpException
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresExtension
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -33,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@SuppressLint("SetTextI18n")
 class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener {
 
     private lateinit var firebaseAuth: FirebaseAuth
@@ -43,8 +43,7 @@ class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var currentUserId: String
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    @SuppressLint("SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -57,7 +56,7 @@ class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener 
         sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
         currentUserId = sharedPreferences.getString("user_id", "DEFAULT") ?: "DEFAULT"
 
-        var currentUser = firebaseAuth.currentUser!!
+        val currentUser = firebaseAuth.currentUser!!
         val email = currentUser.email
         val greeting = "Hello ${email ?: "anonymous"}"
         binding.greetingTextView.text = greeting
@@ -80,6 +79,7 @@ class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener 
         }
 
         setRecyclerView()
+        getRandomQuote()
     }
 
     private fun setRecyclerView() {
@@ -87,8 +87,6 @@ class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener 
         recyclerView = binding.tasksList
         recyclerView.setLayoutManager(LinearLayoutManager(applicationContext))
         recyclerView.setAdapter(TaskAdapter(taskList, this))
-
-        getRandomQuote()
     }
 
     override fun completeTask(task: Task) {
@@ -105,8 +103,12 @@ class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener 
         setRecyclerView()
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    fun getRandomQuote(){
+    fun saveImportedTasks(tasks: List<Task>) {
+        database.saveTasks(tasks)
+        setRecyclerView()
+    }
+
+    private fun getRandomQuote(){
         val service = ApiClientFactory.makeRetrofitService(Constants.QUOTE_API_URL)
         CoroutineScope(Dispatchers.IO).launch {
             val response = service.getQuote()
@@ -115,12 +117,10 @@ class TaskListActivity : AppCompatActivity(), TaskClickListener, DialogListener 
                     if (response.isSuccessful) {
                         binding.quoteTextView.text = "\"${response.body()?.get(0)?.q.toString()}\" - ${response.body()?.get(0)?.a.toString()}"
                     } else {
-                        Log.e("APIERROR", "${response.code()}")
+                        Log.e("error", "${response.code()}")
                     }
-                } catch (e: HttpException) {
-                    Log.e("APIEXCEPTION", "${e.message}")
                 } catch (e: Throwable) {
-                    Log.e("APIEXCEPTION","Ooops: Something else went wrong")
+                    Log.e("error",e.message.toString())
                 }
             }
         }

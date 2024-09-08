@@ -1,38 +1,48 @@
 package com.example.ticktick.fragment
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.net.http.HttpException
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresExtension
+import androidx.annotation.RequiresApi
 import com.example.ticktick.LoginActivity
 import com.example.ticktick.TaskListActivity
 import com.example.ticktick.data.api.ApiClientFactory
 import com.example.ticktick.databinding.FragmentActionSheetBinding
+import com.example.ticktick.model.Task
 import com.example.ticktick.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
+import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 class ActionSheet : BottomSheetDialogFragment() {
     private var _binding: FragmentActionSheetBinding? = null
     private val binding get() = _binding!!
     private lateinit var parentActivity: TaskListActivity
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         parentActivity = context as TaskListActivity
+        sharedPreferences = parentActivity.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, Context.MODE_PRIVATE)
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,25 +59,39 @@ class ActionSheet : BottomSheetDialogFragment() {
         return binding.root
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    fun importTasks() {
+    @SuppressLint("NewApi")
+    private fun importTasks() {
         val service = ApiClientFactory.makeRetrofitService(Constants.TASKS_API_URL)
+        val userId = sharedPreferences.getString("user_id", "DEFAULT") ?: "DEFAULT"
+
         CoroutineScope(Dispatchers.IO).launch {
             val response = service.getTasks()
             withContext(Dispatchers.Main) {
                 try {
                     if (response.isSuccessful) {
-                        // TODO put them in reciclerview / db / w/e and delete line below :)
-                        Log.d("APIRESPONSE", response.body()?.get(0)?.description.toString())
+                        val responseTasks = response.body()?.subList(0, 5)
+                        val tasks = responseTasks?.stream()?.map { Task(userId, it.title,
+                            dateStringToRealmInstant(it.dueDate)) }?.toList()
+                        if (tasks != null) {
+                            parentActivity.saveImportedTasks(tasks)
+                        }
                     } else {
-                        Log.e("APIERROR", "${response.code()}")
+                        Log.e("error", "${response.code()}")
                     }
-                } catch (e: HttpException) {
-                    Log.e("APIEXCEPTION", "${e.message}")
                 } catch (e: Throwable) {
-                    Log.e("APIEXCEPTION","Ooops: Something else went wrong")
+                    Log.e("error", e.message.toString())
                 }
             }
         }
+    }
+
+    private fun dateStringToRealmInstant(dateString: String) : RealmInstant {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val localDate = LocalDate.parse(dateString, formatter)
+
+        val localDateTime = LocalDateTime.of(localDate, java.time.LocalTime.MIDNIGHT)
+
+        val instant = localDateTime.toInstant(ZoneOffset.UTC)
+        return RealmInstant.from(instant.epochSecond, instant.nano)
     }
 }

@@ -6,7 +6,6 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.query.RealmResults
-import io.realm.kotlin.query.find
 
 class RealmDatabase {
     val realm: Realm by lazy {
@@ -34,6 +33,14 @@ class RealmDatabase {
     fun deleteTask(task: Task) {
         realm.writeBlocking {
             findLatest(task)?.also { delete(it) }
+        }
+    }
+
+    fun saveTasks(tasks: List<Task>) {
+        realm.writeBlocking {
+            for (task in tasks) {
+                copyToRealm(task)
+            }
         }
     }
 }
