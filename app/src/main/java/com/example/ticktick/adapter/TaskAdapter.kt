@@ -49,9 +49,7 @@ class TaskViewHolder(private val context: Context, private val binding: TaskItem
             binding.taskDelete.visibility = View.VISIBLE
         }
 
-        val checkbox = if(task.completed) R.drawable.checked_box else R.drawable.unchecked_box
-        binding.taskCheckbox.setImageResource(checkbox)
-
+        binding.taskCheckbox.isChecked = task.completed
         binding.taskCheckbox.setOnClickListener {
             clickListener.completeTask(task)
         }
