@@ -31,6 +31,7 @@
             android:id="@+id/addTaskButton"
             android:layout_width="120dp"
             android:layout_height="45dp"
+            android:backgroundTint="@color/color_selector"
             android:text="Add Task" />
 
         <CheckBox
